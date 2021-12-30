@@ -9,7 +9,7 @@ const LoginScreen = () => {
 
     return (
         <View>
-            <Text>Login to the app</Text>
+            <Text>Login to the app 🇧🇷</Text>
             <Button title="Login" onPress={signInWithGoogle} />
         </View>
     );

@@ -1,6 +1,14 @@
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { View } from 'react-native';
 import * as Google from 'expo-google-app-auth';
+import {
+    GoogleAuthProvider,
+    onAuthStateChanged,
+    signInWithCredential,
+    signOut,
+
+} from '@firebase/auth';
+import { auth } from './firebase'
 
 const AuthContext = createContext({});
 
@@ -12,20 +20,63 @@ let config = {
 }
 
 export const AuthProvider = ({ children }) => {
-    const signInWithGoogle = async () => {
-        Google.logInAsync(config).then(async (logInResult) => {
-            if (logInResult.type === "sucess") {
-                //login...
+
+    const [error, setError] = useState(null);
+    const [user, setUser] = useState(null);
+    const [loadingInitial, setLoadingInitial] = useState(true);
+    const [loading, setLoading] = useState(false)
+
+    useEffect(() =>
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                setUser(user);
+            } else {
+                setUser(null);
             }
-        });
+
+            setLoadingInitial(false);
+        }),
+        []
+    )
+
+    const logout = () => {
+        setLoading(true);
+
+        signOut(auth)
+            .catch((error) => setError(error))
+            .finally(() => setLoading(false));
+    }
+
+    const signInWithGoogle = async () => {
+        setLoading(true);
+        console.log("entrou")
+        await Google.logInAsync(config).then(async (logInResult) => {
+            console.log("entrou2")
+            if (logInResult.type === "success") {
+                const { idToken, acessToken } = logInResult;
+                const credential = GoogleAuthProvider.credential(idToken, acessToken);
+
+                console.log("quase logado")
+                await signInWithCredential(auth, credential);
+                console.log("logado")
+            }
+
+            return Promise.reject();
+        }).catch(error => setError(error))
+            // muda o estado do loading pra quando a requisição acabar
+            .finally(() => setloading(false));
     }
 
     return (
         <AuthContext.Provider value={{
-            user: null,
+            user,
+            loading,
+            error,
             signInWithGoogle,
+            logout
         }}>
-            {children}
+            {/* faz um lazy loading pra aparecer o splash antes do app em si */}
+            {!loadingInitial && children}
         </AuthContext.Provider>
     );
 }
