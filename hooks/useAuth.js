@@ -1,5 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { View } from 'react-native';
+import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import * as Google from 'expo-google-app-auth';
 import {
     GoogleAuthProvider,
@@ -24,7 +23,7 @@ export const AuthProvider = ({ children }) => {
     const [error, setError] = useState(null);
     const [user, setUser] = useState(null);
     const [loadingInitial, setLoadingInitial] = useState(true);
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false);
 
     useEffect(() =>
         onAuthStateChanged(auth, (user) => {
@@ -67,17 +66,20 @@ export const AuthProvider = ({ children }) => {
             .finally(() => setloading(false));
     }
 
+    // ele invés de recarregar todas as varibles juntas ele separa elas
+    const memoedValue = useMemo(() => ({
+        user,
+        loading,
+        error,
+        signInWithGoogle,
+        logout
+    }), [user, loading, error]);
+
     return (
-        <AuthContext.Provider value={{
-            user,
-            loading,
-            error,
-            signInWithGoogle,
-            logout
-        }}>
+        <AuthContext.Provider value={memoedValue} >
             {/* faz um lazy loading pra aparecer o splash antes do app em si */}
             {!loadingInitial && children}
-        </AuthContext.Provider>
+        </AuthContext.Provider >
     );
 }
 
