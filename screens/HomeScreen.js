@@ -60,7 +60,7 @@ const HomeScreen = () => {
             source={{ uri: user.photoURL }} />
         </TouchableOpacity>
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Modal')}>
           <Image style={tw('h-14 w-14')} source={require("../assets/logo.png")} />
         </TouchableOpacity>
 
