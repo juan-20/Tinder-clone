@@ -7,7 +7,7 @@ import { Ionicons, Entypo, AntDesign } from '@expo/vector-icons';
 import Swiper from 'react-native-deck-swiper'
 
 import useAuth from '../hooks/useAuth'
-import { doc, onSnapshot } from 'firebase/firestore';
+import { collection, doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../hooks/firebase';
 
 const DUMMY_DATA = [
@@ -60,12 +60,26 @@ const HomeScreen = () => {
       }
     }),
     []
-  )
+  );
 
   useEffect(() => {
+    let unsub;
 
-  })
+    const fetchCards = async () => {
+      unsub = onSnapshot(collection(db, 'users'), snapshot => {
+        // o set progilmes vai fazer um map e fazer um objeto que vai retornar cada usuario
+        setProfiles(
+          snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+          })))
+      })
+    }
 
+    fetchCards();
+    return unsub;
+  }, [])
+  console.log(profiles);
   return (
     <SafeAreaView style={tw("flex-1")}>
 
