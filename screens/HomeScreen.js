@@ -1,13 +1,13 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { View, Text, Button, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { View, Text, Button, TouchableOpacity, Image, StyleSheet, YellowBox, LogBox } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import tw from 'tailwind-rn';
 import { Ionicons, Entypo, AntDesign } from '@expo/vector-icons';
 import Swiper from 'react-native-deck-swiper'
 
 import useAuth from '../hooks/useAuth'
-import { collection, doc, onSnapshot, setDoc } from 'firebase/firestore';
+import { collection, doc, getDocs, onSnapshot, query, setDoc, where } from 'firebase/firestore';
 import { db } from '../hooks/firebase';
 
 const DUMMY_DATA = [
@@ -37,7 +37,6 @@ const DUMMY_DATA = [
   },
 ]
 
-
 const HomeScreen = () => {
 
   // um useEffect de quando o componente aparece na tela
@@ -62,32 +61,44 @@ const HomeScreen = () => {
     []
   );
 
+  LogBox.ignoreLogs(['Setting']);
+
   useEffect(() => {
     let unsub;
 
     const fetchCards = async () => {
-      unsub = onSnapshot(collection(db, 'users'), snapshot => {
-        // o set progilmes vai fazer um map e fazer um objeto que vai retornar cada usuario
-        setProfiles(
-          snapshot.docs
-            // você não aprecer para você
-            .filter((doc) => doc.id !== user.uid)
-            .map(doc => ({
-              id: doc.id,
-              ...doc.data(),
-            })))
-      })
-    }
+      const passes = await getDocs(collection(db, "users", user.uid, "passes"))
+        .then((snapshot) => snapshot.docs.map((doc) => doc.id)
+        );
+      const swipes = await getDocs(collection(db, "users", user.uid, "swipes"))
+        .then((snapshot) => snapshot.docs.map((doc) => doc.id)
+        );
+
+      const passedUserIds = passes.length > 0 ? passes : ['test'];
+      const swipedUserIds = swipes.length > 0 ? swipes : ['test'];
+      // console.log(passedUserIds,"1", swipedUserIds, "2")
+      unsub = onSnapshot(
+        query(
+          collection(db, "users"),
+          where("id", "not-in", [...passedUserIds, ...swipedUserIds])), (snapshot) => {
+            setProfiles(
+              snapshot.docs.filter(doc => doc.id !== user.uid).map((doc) => ({
+                id: doc.id,
+                ...doc.data(),
+              }))
+            );
+          });
+    };
 
     fetchCards();
     return unsub;
-  }, [])
+  }, [db]);
 
   const swipeLeft = async (cardIndex) => {
     if (!profiles[cardIndex]) return
 
     const userSwiped = profiles[cardIndex];
-    console.log(`${profiles.displayName} swiped PASS on ${userSwiped.displayName}`)
+    console.log(`${user.displayName} passou ${userSwiped.displayName}`)
 
     // ele coloca no db o id do usuario que foi swipado
     setDoc(doc(db, 'users', user.uid, 'passes', userSwiped.id),
@@ -96,7 +107,7 @@ const HomeScreen = () => {
   const swipeRight = async () => {
 
   }
-  console.log(profiles);
+  // console.log(profiles);
   return (
     <SafeAreaView style={tw("flex-1")}>
 
