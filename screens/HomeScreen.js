@@ -7,7 +7,7 @@ import { Ionicons, Entypo, AntDesign } from '@expo/vector-icons';
 import Swiper from 'react-native-deck-swiper'
 
 import useAuth from '../hooks/useAuth'
-import { collection, doc, onSnapshot } from 'firebase/firestore';
+import { collection, doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { db } from '../hooks/firebase';
 
 const DUMMY_DATA = [
@@ -69,16 +69,33 @@ const HomeScreen = () => {
       unsub = onSnapshot(collection(db, 'users'), snapshot => {
         // o set progilmes vai fazer um map e fazer um objeto que vai retornar cada usuario
         setProfiles(
-          snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data(),
-          })))
+          snapshot.docs
+            // você não aprecer para você
+            .filter((doc) => doc.id !== user.uid)
+            .map(doc => ({
+              id: doc.id,
+              ...doc.data(),
+            })))
       })
     }
 
     fetchCards();
     return unsub;
   }, [])
+
+  const swipeLeft = async (cardIndex) => {
+    if (!profiles[cardIndex]) return
+
+    const userSwiped = profiles[cardIndex];
+    console.log(`${profiles.displayName} swiped PASS on ${userSwiped.displayName}`)
+
+    // ele coloca no db o id do usuario que foi swipado
+    setDoc(doc(db, 'users', user.uid, 'passes', userSwiped.id),
+      userSwiped);
+  }
+  const swipeRight = async () => {
+
+  }
   console.log(profiles);
   return (
     <SafeAreaView style={tw("flex-1")}>
@@ -114,11 +131,13 @@ const HomeScreen = () => {
           verticalSwipe={false}
           animateCardOpacity
           backgroundColor='#4fd0e9'
-          onSwipedLeft={() => {
-            console.log('Swipe  PASS')
+          onSwipedLeft={(cardIndex) => {
+            console.log('Swipe  PASS');
+            swipeLeft(cardIndex);
           }}
-          onSwipedRight={() => {
+          onSwipedRight={(cardIndex) => {
             console.log('Swipe  MATCH')
+            swipeRight(cardIndex)
           }}
           overlayLabels={{
             left: {
@@ -155,9 +174,9 @@ const HomeScreen = () => {
                 ]}>
                 <View>
                   <Text style={tw("text-xl font-bold")} >
-                    {card.firstName} {card.lastName}
+                    {card.displayName}
                   </Text>
-                  <Text>{card.occupation}</Text>
+                  <Text>{card.job}</Text>
                 </View>
                 <Text style={tw("text-2xl font-bold")}>{card.age}</Text>
               </View>
