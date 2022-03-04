@@ -25,7 +25,7 @@ const LoginScreen = () => {
                 source={{ uri: "https://tinder.com/static/tinder.png" }}>
                 <TouchableOpacity
                     style={[
-                        tw("absolute bottom-40 w-52 bg-white p-4 rounded-2xl"),
+                        tw("absolute bottom-40 w-52 bg-white p-4 rounded-full"),
                         { marginHorizontal: "25%" }
                     ]}
                     onPress={signInWithGoogle}>

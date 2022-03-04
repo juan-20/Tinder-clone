@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
 import React, { useLayoutEffect, useState } from 'react';
-import { View, Text, Image, TextInput, TouchableOpacity, Button, Platform } from 'react-native';
+import { View, Text, Image, TextInput, TouchableOpacity, KeyboardAvoidingViewComponent } from 'react-native';
 import tw from 'tailwind-rn'
 import { db } from '../hooks/firebase';
 import useAuth from '../hooks/useAuth';
@@ -63,6 +63,7 @@ const ModalScreen = () => {
 
     return (
         <View style={tw('flex-1 items-center pt-1')} >
+            {/* <KeyboardAvoidingViewComponent behavior='position'> */}
             <Image
                 style={tw('h-20 w-full')}
                 resizeMode="contain"
@@ -143,6 +144,7 @@ const ModalScreen = () => {
                     Update profile
                 </Text>
             </TouchableOpacity>
+            {/* </KeyboardAvoidingViewComponent> */}
         </View>
     );
 }

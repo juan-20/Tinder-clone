@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { View, Text, Button, TouchableOpacity, Image, StyleSheet, YellowBox, LogBox } from 'react-native';
+import { View, Text, Button, TouchableOpacity, Image, StyleSheet, LogBox } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import tw from 'tailwind-rn';
 import { Ionicons, Entypo, AntDesign } from '@expo/vector-icons';
@@ -62,6 +62,7 @@ const HomeScreen = () => {
   );
 
   LogBox.ignoreLogs(['Setting']);
+  LogBox.ignoreLogs(['Unsupported']);
 
   useEffect(() => {
     let unsub;
@@ -181,7 +182,8 @@ const HomeScreen = () => {
               <View
                 style={[tw(
                   'absolute bottom-0 bg-white w-full flex-row justify-between items-center h-20 px-6 py-2 rounded-b-xl'
-                ), style.cardShadow
+                ),
+                  // style.cardShadow
                 ]}>
                 <View>
                   <Text style={tw("text-xl font-bold")} >
@@ -242,16 +244,20 @@ const HomeScreen = () => {
 
 export default HomeScreen;
 
-const style = StyleSheet.create({
-  cardShadow: {
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
+// const style = StyleSheet.create({
+//   cardShadow: {
+//     shadowColor: "#000",
+//     shadowOffset: {
+//       width: 0,
+//       height: 1,
+//     },
+//     shadowOpacity: 0.2,
+//     shadowRadius: 1.41,
 
-    elevation: 2,
-  },
-});
+//     elevation: 2,
+//   },
+// });
+// const CardShadow = {
+//   '-webkit-box-shadow': '0px 0px 7px 0px rgba(0,0,0,0.55)',
+//   'box-shadow': '0px 0px 7px 0px rgba(0,0,0,0.55)',
+// };
