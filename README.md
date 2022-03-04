@@ -2,8 +2,8 @@
 
 ### Design:  
 <p align='center'>
-<a  href="https://www.figma.com/file/jud0Y1t6GLUyz2SeIVVSAm/Tinder-2.0?node-id=3%3A14>
-[<img align="center" alt="Link para o Figma" src="https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white" />]
+<a  href="https://www.figma.com/file/jud0Y1t6GLUyz2SeIVVSAm/Tinder-2.0?node-id=3%3A14">
+[<img align="center" alt="Link para o Figma" src="https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white" />
 </a>
 </p>
 
