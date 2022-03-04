@@ -3,8 +3,8 @@ import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
 import React, { useLayoutEffect, useState } from 'react';
 import { View, Text, Image, TextInput, TouchableOpacity, KeyboardAvoidingViewComponent } from 'react-native';
 import tw from 'tailwind-rn'
-import { db } from '../hooks/firebase';
-import useAuth from '../hooks/useAuth';
+import { db } from '../../hooks/firebase';
+import useAuth from '../../hooks/useAuth';
 import * as ImagePicker from 'expo-image-picker';
 import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';

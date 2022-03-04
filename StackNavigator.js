@@ -1,20 +1,19 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
-import ChatScreen from './screens/ChatScreen';
-import HomeScreen from './screens/HomeScreen';
-import LoginScreen from './screens/LoginScreen';
 
 import useAuth from './hooks/useAuth'
-import ModalScreen from './screens/ModalScreen';
+import ModalScreen from './src/screens/ModalScreen';
+import HomeScreen from './src/screens/HomeScreen';
+import ChatScreen from './src/screens/ChatScreen';
+import LoginScreen from './src/screens/LoginScreen';
 
 const Stack = createNativeStackNavigator();
 
-// import { Container } from './styles';
 
 const StackNavigator = () => {
     const { user } = useAuth();
     return (
-        <Stack.Navigator >
+        <Stack.Navigator>
             {user ? (
                 <>
                     <Stack.Group>

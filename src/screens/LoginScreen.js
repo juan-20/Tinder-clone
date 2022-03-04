@@ -1,7 +1,7 @@
 import React, { useLayoutEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { View, Text, Button, ImageBackground, TouchableOpacity } from 'react-native';
-import useAuth from '../hooks/useAuth';
+import useAuth from '../../hooks/useAuth';
 import tw from 'tailwind-rn'
 
 // import { Container } from './styles';

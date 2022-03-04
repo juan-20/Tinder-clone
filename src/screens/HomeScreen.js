@@ -6,9 +6,11 @@ import tw from 'tailwind-rn';
 import { Ionicons, Entypo, AntDesign } from '@expo/vector-icons';
 import Swiper from 'react-native-deck-swiper'
 
-import useAuth from '../hooks/useAuth'
+import useAuth from '../../hooks/useAuth'
 import { collection, doc, getDocs, onSnapshot, query, setDoc, where } from 'firebase/firestore';
-import { db } from '../hooks/firebase';
+import { db } from '../../hooks/firebase';
+
+import styled from 'styled-components/native';
 
 const DUMMY_DATA = [
   {
@@ -61,8 +63,8 @@ const HomeScreen = () => {
     []
   );
 
-  LogBox.ignoreLogs(['Setting']);
-  LogBox.ignoreLogs(['Unsupported']);
+  // LogBox.ignoreLogs(['Setting']);
+  // LogBox.ignoreLogs(['Unsupported']);
 
   useEffect(() => {
     let unsub;
@@ -121,7 +123,7 @@ const HomeScreen = () => {
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => navigation.navigate('Modal')}>
-          <Image style={tw('h-14 w-14')} source={require("../assets/logo.png")} />
+          <Image style={tw('h-14 w-14')} source={require("../../assets/logo.png")} />
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => navigation.navigate("Chat")} style={tw("absolute right-5 top-3")} >
@@ -183,7 +185,7 @@ const HomeScreen = () => {
                 style={[tw(
                   'absolute bottom-0 bg-white w-full flex-row justify-between items-center h-20 px-6 py-2 rounded-b-xl'
                 ),
-                  // style.cardShadow
+                style.cardShadow
                 ]}>
                 <View>
                   <Text style={tw("text-xl font-bold")} >
@@ -199,7 +201,7 @@ const HomeScreen = () => {
               style={[tw(
                 'relative bg-white h-3/4 rounded-xl justify-center items-center'
               ),
-              style.cardShadow,
+                CardShadow,
               ]}>
               <Text style={tw('font-bold pb-5')}>
                 No more profiles
@@ -257,7 +259,7 @@ export default HomeScreen;
 //     elevation: 2,
 //   },
 // });
-// const CardShadow = {
-//   '-webkit-box-shadow': '0px 0px 7px 0px rgba(0,0,0,0.55)',
-//   'box-shadow': '0px 0px 7px 0px rgba(0,0,0,0.55)',
-// };
+const CardShadow = {
+  '-webkit-box-shadow': '0px 3px 12px -2px rgba(0,0,0,0.71)',
+  'box-shadow': '0px 3px 12px -2px rgba(0,0,0,0.71)'
+};
