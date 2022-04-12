@@ -61,8 +61,8 @@ const HomeScreen = () => {
     []
   );
 
-  LogBox.ignoreLogs(['Setting']);
-  LogBox.ignoreLogs(['Unsupported']);
+  // LogBox.ignoreLogs(['Setting']);
+  // LogBox.ignoreLogs(['Unsupported']);
 
   useEffect(() => {
     let unsub;
