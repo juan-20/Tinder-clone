@@ -3,14 +3,12 @@ import { useNavigation } from '@react-navigation/native';
 import { View, Text, Button, TouchableOpacity, Image, StyleSheet, LogBox } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import tw from 'tailwind-rn';
-import { Ionicons, Entypo, AntDesign } from '@expo/vector-icons';
 import Swiper from 'react-native-deck-swiper'
+import { Ionicons, Entypo, AntDesign } from '@expo/vector-icons';
 
 import useAuth from '../../hooks/useAuth'
 import { collection, doc, getDocs, onSnapshot, query, setDoc, where } from 'firebase/firestore';
 import { db } from '../../hooks/firebase';
-
-import styled from 'styled-components/native';
 
 const DUMMY_DATA = [
   {
@@ -63,8 +61,8 @@ const HomeScreen = () => {
     []
   );
 
-  // LogBox.ignoreLogs(['Setting']);
-  // LogBox.ignoreLogs(['Unsupported']);
+  LogBox.ignoreLogs(['Setting']);
+  LogBox.ignoreLogs(['Unsupported']);
 
   useEffect(() => {
     let unsub;
@@ -201,7 +199,7 @@ const HomeScreen = () => {
               style={[tw(
                 'relative bg-white h-3/4 rounded-xl justify-center items-center'
               ),
-                CardShadow,
+              style.cardShadow,
               ]}>
               <Text style={tw('font-bold pb-5')}>
                 No more profiles
@@ -246,20 +244,20 @@ const HomeScreen = () => {
 
 export default HomeScreen;
 
-// const style = StyleSheet.create({
-//   cardShadow: {
-//     shadowColor: "#000",
-//     shadowOffset: {
-//       width: 0,
-//       height: 1,
-//     },
-//     shadowOpacity: 0.2,
-//     shadowRadius: 1.41,
+const style = StyleSheet.create({
+  cardShadow: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
 
-//     elevation: 2,
-//   },
-// });
-const CardShadow = {
-  '-webkit-box-shadow': '0px 3px 12px -2px rgba(0,0,0,0.71)',
-  'box-shadow': '0px 3px 12px -2px rgba(0,0,0,0.71)'
-};
+    elevation: 2,
+  },
+});
+// const CardShadow = {
+//   '-webkit-box-shadow': '0px 3px 12px -2px rgba(0,0,0,0.71)',
+//   'box-shadow': '0px 3px 12px -2px rgba(0,0,0,0.71)'
+// };
