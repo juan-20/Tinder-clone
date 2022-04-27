@@ -4,10 +4,11 @@ import { View, Text, Button, TouchableOpacity, Image, StyleSheet, LogBox } from 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Swiper from 'react-native-deck-swiper'
 import useAuth from '../../hooks/useAuth'
-import { collection, doc, getDoc, getDocs, onSnapshot, query, setDoc, where } from 'firebase/firestore';
+import { collection, doc, DocumentSnapshot, getDoc, getDocs, onSnapshot, query, serverTimestamp, setDoc, where } from 'firebase/firestore';
 import { db } from '../../hooks/firebase';
 import { Ionicons, Entypo, AntDesign } from '@expo/vector-icons';
 import tw from 'tailwind-rn';
+import generateId from '../../lib/generateId';
 
 const HomeScreen = () => {
 
@@ -84,9 +85,47 @@ const HomeScreen = () => {
     if (!profiles[cardIndex]) return
 
     const userSwiped = profiles[cardIndex];
+    const loggedInProfile = await (
+      await getDoc(db, 'users', user.uid)
+    ).data()
+
+    // vê se o usuario te deu match
+    getDoc(doc(db, 'users', userSwiped.id, 'swipes', user.uid)).then(
+      (DocumentSnapshot) => {
+        if(DocumentSnapshot.exists()) {
+          // usuario te deu match antes de você dar nele
+          console.log(`OBA, você deu match com ${userSwiped.displayName}`)
+
+          
+          setDoc(doc(db, 'users', user.uid, 'swipes', userSwiped.id),
+          userSwiped
+          );
+          
+          // criando o match:
+          setDoc(doc(db, 'matches', generateId(user.uid, userSwiped.id)), {
+            users: {
+              [user.uid]: loggedInProfile,
+              [userSwiped.id]: userSwiped
+            },
+            userMatched: [user.uid, userSwiped.id],
+            timestamp: serverTimestamp(),
+          });
+
+          navigation.navigate('Match', {
+            loggedInProfile, userSwiped,
+          })
+
+        }else{
+          // usuario te passou ou não foi matchado
+          console.log(`você quer o/a ${userSwiped.displayName}`)
+          setDoc(doc(db, 'users', user.uid, 'swipes', userSwiped.id),
+          userSwiped
+          );
+        }
+      }
+    )
+
     console.log(`${user.displayName} quer match com ${userSwiped.displayName}`)
-
-
     setDoc(doc(db, 'users', user.uid, 'swipes', userSwiped.id),
       userSwiped);
   }
