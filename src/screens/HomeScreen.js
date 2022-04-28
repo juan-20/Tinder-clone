@@ -40,29 +40,29 @@ const HomeScreen = () => {
 
     const fetchCards = async () => {
       const passes = await getDocs(collection(db, 'users', user.uid, 'passes'))
-      .then(snapshot => snapshot.docs.map((doc) => doc.id))
+        .then(snapshot => snapshot.docs.map((doc) => doc.id))
 
       const swipes = await getDocs(collection(db, "users", user.uid, "swipes"))
         .then((snapshot) => snapshot.docs.map((doc) => doc.id)
         );
 
-        
-        // console.log(passedUserIds,"1", swipedUserIds, "2")
-        const passedUserIds = passes.length > 0 ? passes : ['test'];
-        const swipedUserIds = swipes.length > 0 ? swipes : ['test'];
-        unsub = onSnapshot(
-          query(
-            collection(db, "users"),
-            where("id", "not-in", [...passedUserIds, ...swipedUserIds])), 
-            (snapshot) => {
-              setProfiles(
-                snapshot.docs.filter(doc => doc.id !== user.uid).map((doc) => ({
-                  id: doc.id,
-                  ...doc.data(),
-                }))
-              );
-            });
-      };
+
+      // console.log(passedUserIds,"1", swipedUserIds, "2")
+      const passedUserIds = passes.length > 0 ? passes : ['test'];
+      const swipedUserIds = swipes.length > 0 ? swipes : ['test'];
+      unsub = onSnapshot(
+        query(
+          collection(db, "users"),
+          where("id", "not-in", [...passedUserIds, ...swipedUserIds])),
+        (snapshot) => {
+          setProfiles(
+            snapshot.docs.filter(doc => doc.id !== user.uid).map((doc) => ({
+              id: doc.id,
+              ...doc.data(),
+            }))
+          );
+        });
+    };
 
 
     fetchCards();
