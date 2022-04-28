@@ -48,22 +48,22 @@ const HomeScreen = () => {
 
         
         // console.log(passedUserIds,"1", swipedUserIds, "2")
+        const passedUserIds = passes.length > 0 ? passes : ['test'];
+        const swipedUserIds = swipes.length > 0 ? swipes : ['test'];
+        unsub = onSnapshot(
+          query(
+            collection(db, "users"),
+            where("id", "not-in", [...passedUserIds, ...swipedUserIds])), 
+            (snapshot) => {
+              setProfiles(
+                snapshot.docs.filter(doc => doc.id !== user.uid).map((doc) => ({
+                  id: doc.id,
+                  ...doc.data(),
+                }))
+              );
+            });
       };
-      const passedUserIds = passes.length > 0 ? passes : ['test'];
-      const swipedUserIds = swipes.length > 0 ? swipes : ['test'];
 
-    unsub = onSnapshot(
-      query(
-        collection(db, "users"),
-        where("id", "not-in", [...passedUserIds, ...swipedUserIds])), 
-        (snapshot) => {
-          setProfiles(
-            snapshot.docs.filter(doc => doc.id !== user.uid).map((doc) => ({
-              id: doc.id,
-              ...doc.data(),
-            }))
-          );
-        });
 
     fetchCards();
     return unsub;
@@ -82,53 +82,46 @@ const HomeScreen = () => {
   }
 
   const swipeRight = async (cardIndex) => {
-    if (!profiles[cardIndex]) return
+    if (!profiles[cardIndex]) return;
 
     const userSwiped = profiles[cardIndex];
+
     const loggedInProfile = await (
-      await getDoc(db, 'users', user.uid)
-    ).data()
+      await getDoc(doc(db, "users", user.uid))
+    ).data();
 
-    // vê se o usuario te deu match
-    getDoc(doc(db, 'users', userSwiped.id, 'swipes', user.uid)).then(
-      (DocumentSnapshot) => {
-        if(DocumentSnapshot.exists()) {
-          // usuario te deu match antes de você dar nele
-          console.log(`OBA, você deu match com ${userSwiped.displayName}`)
-
-          
-          setDoc(doc(db, 'users', user.uid, 'swipes', userSwiped.id),
-          userSwiped
+    getDoc(doc(db, "users", userSwiped.id, "swipes", user.uid)).then(
+      (documentSnapshot) => {
+        if (documentSnapshot.exists()) {
+          console.log(`You MATCHED with ${userSwiped.displayName}`);
+          setDoc(
+            doc(db, "users", user.uid, "swipes", userSwiped.id),
+            userSwiped
           );
-          
-          // criando o match:
-          setDoc(doc(db, 'matches', generateId(user.uid, userSwiped.id)), {
+
+          setDoc(doc(db, "matches", generateId(user.uid, userSwiped.id)), {
             users: {
               [user.uid]: loggedInProfile,
-              [userSwiped.id]: userSwiped
+              [userSwiped.id]: userSwiped,
             },
-            userMatched: [user.uid, userSwiped.id],
+            usersMatched: [user.uid, userSwiped.id],
             timestamp: serverTimestamp(),
           });
 
-          navigation.navigate('Match', {
-            loggedInProfile, userSwiped,
-          })
-
-        }else{
-          // usuario te passou ou não foi matchado
-          console.log(`você quer o/a ${userSwiped.displayName}`)
-          setDoc(doc(db, 'users', user.uid, 'swipes', userSwiped.id),
-          userSwiped
+          navigation.navigate("Match", {
+            loggedInProfile,
+            userSwiped,
+          });
+        } else {
+          console.log(
+            `You swiped on ${userSwiped.displayName} (${userSwiped.job})`
           );
         }
       }
-    )
+    );
 
-    console.log(`${user.displayName} quer match com ${userSwiped.displayName}`)
-    setDoc(doc(db, 'users', user.uid, 'swipes', userSwiped.id),
-      userSwiped);
-  }
+    setDoc(doc(db, "users", user.uid, "swipes", userSwiped.id), userSwiped);
+  };
   // console.log(profiles);
   return (
     <SafeAreaView style={tw("flex-1")}>
