@@ -72,21 +72,15 @@ const ModalScreen = () => {
 
             <Text
                 style={tw('text-xl text-gray-500 p-2 font-bold')}>
-                Welcome {user.displayName}
+                Oii, {user.displayName}
             </Text>
 
 
             {/* Picture */}
             <Text
                 style={tw('text-center p-4 font-bold text-red-400')}>
-                Profile Pic
+                Foto de perfil
             </Text>
-            {/* <TextInput
-                value={image}
-                onChangeText={(text) => setImage(text)}
-                placeholder='Enter a Profile Pic URL'
-                style={tw('text-center text-xl pb-2  border-b-2 border-red-400')}
-            /> */}
             <TouchableOpacity
                 style={tw('inline-block h-16 w-16 rounded-full ring-2 ring-white display-flex items-center justify-center bg-gray-300')}
                 onPress={pickImage}
@@ -96,38 +90,32 @@ const ModalScreen = () => {
                         style={[{ width: 64, height: 64 },
                         tw('rounded-full')]} />
                     :
-                    <AntDesign
-                        style={tw('')}
-                        name="user" size={32} color="black" />
+                    <MaterialIcons name="add-a-photo" size={24} color="black" />
                 }
-                <MaterialIcons
-                    style={tw('absolute left-12 top-10 h-6 w-6 rounded-full bg-blue-400 self-center text-center')}
-                    name="add-photo-alternate" size={20} color="black" title="Pick an image from camera roll" />
-                {/* {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />} */}
             </TouchableOpacity>
 
 
             {/* Job */}
             <Text
                 style={tw('text-center p-4 font-bold text-red-400')}>
-                Job:
+                Coisa preferida:
             </Text>
             <TextInput
                 value={job}
                 onChangeText={setJob}
-                placeholder='Enter your job'
-                style={tw('text-center text-xl pb-2 border-b-2 border-red-400')}
+                placeholder='Ex.: Música'
+                style={tw('text-center text-xl w-100 pb-2 border-b-2 border-red-400')}
             />
 
             {/* Age */}
             <Text
                 style={tw('text-center p-4 font-bold text-red-400')}>
-                Age:
+                Idade:
             </Text>
             <TextInput
                 value={age}
                 onChangeText={setAge}
-                placeholder='Enter your age'
+                placeholder='Ex.: 19'
                 style={tw('text-center text-xl pb-2  border-b-2 border-red-400')}
                 maxLength={2}
                 keyboardType="numeric"
