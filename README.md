@@ -1,5 +1,9 @@
 #  Tinder 2.0
 
+### Imagens do projeto:
+
+![](https://github.com/juan-20/Juan/blob/main/src/assets/projects/tinder.gif?raw=true)
+
 ### Design:  
 <p align='center'>
 <a  href="https://www.figma.com/file/jud0Y1t6GLUyz2SeIVVSAm/Tinder-2.0?node-id=3%3A14">
